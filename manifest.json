@@ -1,0 +1,16 @@
+{
+  "manifest_version": 2,
+
+  "name": "YouTube™ Bookmark Cleaner",
+  "description": "Find bookmarks that link to removed YouTube™ videos",
+  "version": "0.1",
+
+  "permissions": [
+    "bookmarks"
+  ],
+
+  "content_security_policy": "script-src 'self' https://apis.google.com; object-src 'self'",
+
+  "options_page": "options.html"
+}
+

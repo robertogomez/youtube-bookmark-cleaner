@@ -1,0 +1,16 @@
+README
+
+NAME
+    YouTube™ Bookmark Cleaner - Find bookmarks that link to removed YouTube™ videos
+
+DESCRIPTION
+    Search your bookmarks for YouTube™ videos that are removed or unavailable
+    due to copyright disputes, account termination, etc. While other bookmark
+    cleaners work well for finding broken links and duplicates, they do not
+    work on YouTube™ videos because they always return successful HTTP status
+    codes, even when the video has been deleted. This extension fills that gap
+    by verifying the status of each video using the YouTube™ Data API.
+
+AUTHOR
+    Roberto Gomez, Jr.
+
