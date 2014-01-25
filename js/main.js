@@ -1,11 +1,23 @@
 var Ybc = (function() {
+    var removedVids = [];
+
     // Send the assembled request to the YouTube Data API and check the response
     // The request is sent in this function, instead of in the for loop of scanNode(),
     // since sync issues arise when a callback function is used in a loop
     var sendRequest = function(request, node, i) {
         request.execute(function(response) {
-        if (response.pageInfo.totalResults === 0)
-            console.log(node.children[i].title + " has been removed from YouTube...");
+            if (response.pageInfo.totalResults === 0) {
+                console.log(node.children[i].title + " has been removed from YouTube...");
+                //removedVids.push(node.children[i]);
+                var list = document.getElementById("list");
+                var listItem = document.createElement("li");
+                var link = document.createElement("a");
+                var linkText = document.createTextNode(node.children[i].title);
+                link.setAttribute("href", node.children[i].url);
+                link.appendChild(linkText);
+                listItem.appendChild(link);
+                list.appendChild(listItem);
+            }
         });
     };
 
