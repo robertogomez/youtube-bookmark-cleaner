@@ -11,8 +11,11 @@ var Ybc = (function() {
                 //removedVids.push(node.children[i]);
                 var list = document.getElementById("list");
                 var listItem = document.createElement("li");
+                var checkBox = document.createElement("input");
                 var link = document.createElement("a");
                 var linkText = document.createTextNode(node.children[i].title);
+                checkBox.setAttribute("type", "checkbox");
+                listItem.appendChild(checkBox);
                 link.setAttribute("href", node.children[i].url);
                 link.appendChild(linkText);
                 listItem.appendChild(link);
