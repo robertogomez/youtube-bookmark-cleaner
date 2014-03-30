@@ -1,5 +1,6 @@
 var Ybc = (function() {
-    var removedVids = [];
+    var removedVideos = [];
+    var checkBoxes = [];
 
     // Send the assembled request to the YouTube Data API and check the response
     // The request is sent in this function, instead of in the for loop of scanNode(),
@@ -7,19 +8,24 @@ var Ybc = (function() {
     var sendRequest = function(request, node, i) {
         request.execute(function(response) {
             if (response.pageInfo.totalResults === 0) {
-                console.log(node.children[i].title + " has been removed from YouTube...");
-                //removedVids.push(node.children[i]);
                 var list = document.getElementById("list");
                 var listItem = document.createElement("li");
                 var checkBox = document.createElement("input");
                 var link = document.createElement("a");
                 var linkText = document.createTextNode(node.children[i].title);
+
                 checkBox.setAttribute("type", "checkbox");
                 listItem.appendChild(checkBox);
                 link.setAttribute("href", node.children[i].url);
                 link.appendChild(linkText);
                 listItem.appendChild(link);
                 list.appendChild(listItem);
+                checkBoxes.push(checkBox);
+
+                // Save a reference to the removed YT bookmark for later access
+                removedVideos.push(node.children[i]);
+
+                console.log(node.children[i].title + " has been removed from YouTube...");
             }
         });
     };
@@ -64,6 +70,15 @@ var Ybc = (function() {
         chrome.bookmarks.getTree(function(tree) { traverseTree(tree[0]); });
     };
  
+    var deleteBookmarks = function() {
+        for (var i=0; i<checkBoxes.length; i++) {
+            if (checkBoxes[i].checked)
+                console.log(removedVideos[i].title);
+        }
+    };
+
+    document.getElementById("delete-button").addEventListener("click", deleteBookmarks, false);
+
     // Public methods
     return {
         init: function() {
