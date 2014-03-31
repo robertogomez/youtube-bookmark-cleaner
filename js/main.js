@@ -11,7 +11,7 @@ var Ybc = (function() {
                 var tbody      = document.getElementById("tbody"),
                     tr         = document.createElement("tr"),
                     tdCheckbox = document.createElement("td"),
-                    tdLink     = document.createElement("td"),
+                    tdName     = document.createElement("td"),
                     tdFolder   = document.createElement("td"),
                     checkBox   = document.createElement("input"),
                     link       = document.createElement("a");
@@ -21,10 +21,10 @@ var Ybc = (function() {
                 link.setAttribute("href", node.children[i].url);
                 link.textContent = node.children[i].title;
                 tdCheckbox.appendChild(checkBox);
-                tdLink.appendChild(link);
+                tdName.appendChild(link);
                 tdFolder.textContent = node.title;
                 tr.appendChild(tdCheckbox);
-                tr.appendChild(tdLink);
+                tr.appendChild(tdName);
                 tr.appendChild(tdFolder);
                 tbody.appendChild(tr);
 
