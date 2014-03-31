@@ -1,6 +1,6 @@
 var Ybc = (function() {
-    var removedVideos = [];
-    var checkBoxes = [];
+    var removedVideos = [],
+        checkBoxes    = [];
 
     // Send the assembled request to the YouTube Data API and check the response
     // The request is sent in this function, instead of in the for loop of scanNode(),
@@ -8,12 +8,12 @@ var Ybc = (function() {
     var sendRequest = function(request, node, i) {
         request.execute(function(response) {
             if (response.pageInfo.totalResults === 0) {
-                var tbody = document.getElementById("tbody");
-                var tr = document.createElement("tr");
-                var tdCheckbox = document.createElement("td");
-                var tdLink = document.createElement("td");
-                var checkBox = document.createElement("input");
-                var link = document.createElement("a");
+                var tbody      = document.getElementById("tbody"),
+                    tr         = document.createElement("tr"),
+                    tdCheckbox = document.createElement("td"),
+                    tdLink     = document.createElement("td"),
+                    checkBox   = document.createElement("input"),
+                    link       = document.createElement("a");
 
                 // Add the bookmark to the table
                 checkBox.setAttribute("type", "checkbox");
@@ -41,10 +41,10 @@ var Ybc = (function() {
     // http://stackoverflow.com/questions/3452546/
     // javascript-regex-how-to-get-youtube-video-id-from-url#comment20895940_14701040
     var scanNode = function(node) {
-        var regex = /^.*(?:youtu.be\/|v\/|e\/|u\/\w+\/|embed\/|v=)([^#\&\?]*).*/;
-        var match;
-        var videoId;
-        var request;
+        var regex = /^.*(?:youtu.be\/|v\/|e\/|u\/\w+\/|embed\/|v=)([^#\&\?]*).*/,
+            match,
+            videoId,
+            request;
 
         // Iterate over the child nodes of the parent node
         for (var i=0; i<node.children.length; i++) {
