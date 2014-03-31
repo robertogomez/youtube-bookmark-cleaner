@@ -12,6 +12,7 @@ var Ybc = (function() {
                     tr         = document.createElement("tr"),
                     tdCheckbox = document.createElement("td"),
                     tdLink     = document.createElement("td"),
+                    tdFolder   = document.createElement("td"),
                     checkBox   = document.createElement("input"),
                     link       = document.createElement("a");
 
@@ -21,8 +22,10 @@ var Ybc = (function() {
                 link.textContent = node.children[i].title;
                 tdCheckbox.appendChild(checkBox);
                 tdLink.appendChild(link);
+                tdFolder.textContent = node.title;
                 tr.appendChild(tdCheckbox);
                 tr.appendChild(tdLink);
+                tr.appendChild(tdFolder);
                 tbody.appendChild(tr);
 
                 // Save a reference to the removed YT bookmark for later access
