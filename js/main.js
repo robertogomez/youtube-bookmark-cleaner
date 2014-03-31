@@ -8,22 +8,22 @@ var Ybc = (function() {
     var sendRequest = function(request, node, i) {
         request.execute(function(response) {
             if (response.pageInfo.totalResults === 0) {
-                var tbody      = document.getElementById("tbody"),
-                    tr         = document.createElement("tr"),
-                    tdCheckbox = document.createElement("td"),
-                    tdName     = document.createElement("td"),
-                    tdFolder   = document.createElement("td"),
-                    checkBox   = document.createElement("input"),
-                    link       = document.createElement("a");
+                var tbody    = document.getElementById("tbody"),
+                    tr       = document.createElement("tr"),
+                    tdSelect = document.createElement("td"),
+                    tdName   = document.createElement("td"),
+                    tdFolder = document.createElement("td"),
+                    checkBox = document.createElement("input"),
+                    link     = document.createElement("a");
 
                 // Add the bookmark to the table
                 checkBox.setAttribute("type", "checkbox");
                 link.setAttribute("href", node.children[i].url);
                 link.textContent = node.children[i].title;
-                tdCheckbox.appendChild(checkBox);
+                tdSelect.appendChild(checkBox);
                 tdName.appendChild(link);
                 tdFolder.textContent = node.title;
-                tr.appendChild(tdCheckbox);
+                tr.appendChild(tdSelect);
                 tr.appendChild(tdName);
                 tr.appendChild(tdFolder);
                 tbody.appendChild(tr);
