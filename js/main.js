@@ -8,22 +8,28 @@ var Ybc = (function() {
     var sendRequest = function(request, node, i) {
         request.execute(function(response) {
             if (response.pageInfo.totalResults === 0) {
-                var list = document.getElementById("list");
-                var listItem = document.createElement("li");
+                var tbody = document.getElementById("tbody");
+                var tr = document.createElement("tr");
+                var tdCheckbox = document.createElement("td");
+                var tdLink = document.createElement("td");
                 var checkBox = document.createElement("input");
                 var link = document.createElement("a");
-                var linkText = document.createTextNode(node.children[i].title);
 
+                // Add the bookmark to the table
                 checkBox.setAttribute("type", "checkbox");
-                listItem.appendChild(checkBox);
                 link.setAttribute("href", node.children[i].url);
-                link.appendChild(linkText);
-                listItem.appendChild(link);
-                list.appendChild(listItem);
-                checkBoxes.push(checkBox);
+                link.textContent = node.children[i].title;
+                tdCheckbox.appendChild(checkBox);
+                tdLink.appendChild(link);
+                tr.appendChild(tdCheckbox);
+                tr.appendChild(tdLink);
+                tbody.appendChild(tr);
 
                 // Save a reference to the removed YT bookmark for later access
                 removedVideos.push(node.children[i]);
+
+                // Save a reference to the bookmark's checkbox
+                checkBoxes.push(checkBox);
 
                 console.log(node.children[i].title + " has been removed from YouTube...");
             }
