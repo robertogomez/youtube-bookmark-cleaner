@@ -13,6 +13,17 @@ li {
     display: inline;
 }
 
+button {
+    padding: 5px 5px;
+    border: 1px solid white;
+    background: none;
+}
+
+button:hover {
+    border: 1px solid gray;
+    border-radius: .5em;
+}
+
 table {
     clear: both;
 }
