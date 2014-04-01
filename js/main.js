@@ -13,8 +13,10 @@ var Ybc = (function() {
                     tdSelect = document.createElement("td"),
                     tdName   = document.createElement("td"),
                     tdFolder = document.createElement("td"),
+                    tdDate   = document.createElement("td"),
                     checkBox = document.createElement("input"),
-                    link     = document.createElement("a");
+                    link     = document.createElement("a"),
+                    date     = new Date(node.children[i].dateAdded);
 
                 // Add the bookmark to the table
                 checkBox.setAttribute("type", "checkbox");
@@ -23,9 +25,11 @@ var Ybc = (function() {
                 tdSelect.appendChild(checkBox);
                 tdName.appendChild(link);
                 tdFolder.textContent = node.title;
+                tdDate.textContent = date.toLocaleDateString();
                 tr.appendChild(tdSelect);
                 tr.appendChild(tdName);
                 tr.appendChild(tdFolder);
+                tr.appendChild(tdDate);
                 tbody.appendChild(tr);
 
                 // Save a reference to the removed YT bookmark for later access
