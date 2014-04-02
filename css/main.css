@@ -20,13 +20,13 @@ h1 {
 
 button {
     padding: 5px 5px;
-    border: 1px solid white;
-    background: none;
+    border: 1px solid #c8c8c8;
+    border-radius: .3em;
+    background-color: #f5f5f5;
 }
 
 button:hover {
-    border: 1px solid gray;
-    border-radius: .5em;
+    border-color: #a0a0a0;
 }
 
 thead {
