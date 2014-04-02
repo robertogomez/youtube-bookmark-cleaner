@@ -18,6 +18,10 @@ h1 {
     bottom: 0;
 }
 
+#scan-button {
+    margin-left: .5em;
+}
+
 button {
     padding: 5px 5px;
     border: 1px solid #c8c8c8;
