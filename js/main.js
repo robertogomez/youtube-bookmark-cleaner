@@ -8,7 +8,8 @@ var Ybc = (function() {
     var sendRequest = function(request, node, i) {
         request.execute(function(response) {
             if (response.pageInfo.totalResults === 0) {
-                var tbody    = document.getElementById("tbody"),
+                var table    = document.getElementById("table"),
+                    tbody    = document.getElementById("tbody"),
                     tr       = document.createElement("tr"),
                     tdSelect = document.createElement("td"),
                     tdName   = document.createElement("td"),
@@ -18,6 +19,10 @@ var Ybc = (function() {
                     link     = document.createElement("a"),
                     date     = new Date(node.children[i].dateAdded);
 
+                // Display the table if it is hidden
+                if (window.getComputedStyle(table, null).getPropertyValue("display") === "none")
+                    table.style.display = "block";
+ 
                 // Add the bookmark to the table
                 checkBox.setAttribute("type", "checkbox");
                 link.setAttribute("href", node.children[i].url);

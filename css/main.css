@@ -33,6 +33,10 @@ button:hover {
     border-color: #a0a0a0;
 }
 
+table {
+    display: none;
+}
+
 thead {
     background-color: lightblue;
 }
