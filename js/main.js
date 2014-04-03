@@ -28,6 +28,7 @@ var Ybc = (function() {
                 link.setAttribute("href", node.children[i].url);
                 link.textContent = node.children[i].title;
                 tdSelect.appendChild(checkBox);
+                tdSelect.classList.add("checkbox-cell");
                 tdName.appendChild(link);
                 tdFolder.textContent = node.title;
                 tdDate.textContent = date.toLocaleDateString();
