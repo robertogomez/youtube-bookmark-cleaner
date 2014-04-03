@@ -21,7 +21,7 @@ var Ybc = (function() {
 
                 // Display the table if it is hidden
                 if (window.getComputedStyle(table, null).getPropertyValue("display") === "none")
-                    table.style.display = "block";
+                    table.style.display = "table";
  
                 // Add the bookmark to the table
                 checkBox.setAttribute("type", "checkbox");
