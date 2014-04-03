@@ -30,6 +30,7 @@ var Ybc = (function() {
                 tdSelect.appendChild(checkBox);
                 tdName.appendChild(link);
                 tdFolder.textContent = node.title;
+                tdFolder.classList.add("folder-cell");
                 tdDate.textContent = date.toLocaleDateString();
                 tr.appendChild(tdSelect);
                 tr.appendChild(tdName);
