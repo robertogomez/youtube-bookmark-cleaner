@@ -34,15 +34,31 @@ button:hover {
 }
 
 table {
-    display: none;
+    width: 100%;
+    table-layout: fixed;
 }
 
 thead {
     background-color: lightblue;
 }
 
-.folder-cell {
-    max-width: 150px;
+#select-col {
+    width: 5%;
+}
+
+#name-col {
+    width: 60%;
+}
+
+#folder-col {
+    width: 25%;
+}
+
+#date-col {
+    width: 10%;
+}
+
+td {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
