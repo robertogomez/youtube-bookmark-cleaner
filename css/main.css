@@ -34,13 +34,14 @@ button:hover {
 }
 
 table {
+    display: none;
     width: 100%;
     table-layout: fixed;
-    display: none;
+    border-collapse: collapse;
 }
 
 thead {
-    background-color: lightblue;
+    background-color: #d4dde4;
 }
 
 #select-col {
@@ -68,5 +69,11 @@ td {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    background-color: #fcfcfc;
+}
+
+th, td {
+    border: 1px solid lightgray;
+    padding: 0.25em;
 }
 
