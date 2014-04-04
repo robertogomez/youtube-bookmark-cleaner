@@ -112,7 +112,23 @@ var Ybc = (function() {
         }
     };
 
+    var selectDeselectAll = function() {
+        var selectAll = document.getElementById("select-all");
+
+        // Check all the checkboxes if selectAll is checked
+        if (selectAll.checked) {
+            for (i=0; i<checkBoxes.length; i++)
+                checkBoxes[i].checked = true;
+        }
+        // Uncheck all the checkboxes if selectAll is unchecked
+        else {
+            for (var i=0; i<checkBoxes.length; i++)
+                checkBoxes[i].checked = false;
+        }
+    };
+
     document.getElementById("delete-button").addEventListener("click", deleteBookmarks, false);
+    document.getElementById("select-all").addEventListener("change", selectDeselectAll, false);
 
     // Public methods
     return {
