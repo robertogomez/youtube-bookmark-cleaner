@@ -25,6 +25,8 @@ var Ybc = (function() {
  
                 // Add the bookmark to the table
                 checkBox.setAttribute("type", "checkbox");
+                // Bind to the click event instead of change to avoid chain-firing from selectAll
+                checkBox.addEventListener("click", enableOrDisableDelete, false);
                 link.setAttribute("href", node.children[i].url);
                 link.textContent = node.children[i].title;
                 tdSelect.appendChild(checkBox);
@@ -124,6 +126,23 @@ var Ybc = (function() {
         else {
             for (var i=0; i<checkBoxes.length; i++)
                 checkBoxes[i].checked = false;
+        }
+    };
+
+    var enableOrDisableDelete = function() {
+        var deleteButton = document.getElementById("delete-button");
+
+        // Enable the delete button if it is disabled and the checkbox is checked
+        if (deleteButton.disabled && this.checked)
+            deleteButton.disabled = false;
+        // Otherwise disable it if all the other checkboxes are unchecked
+        else {
+            for (var i=0; i<checkBoxes.length; i++) {
+                if (checkBoxes[i].checked)
+                    return;
+            }
+
+            deleteButton.disabled = true;
         }
     };
 
