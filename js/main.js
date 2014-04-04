@@ -26,7 +26,7 @@ var Ybc = (function() {
                 // Add the bookmark to the table
                 checkBox.setAttribute("type", "checkbox");
                 // Bind to the click event instead of change to avoid chain-firing from selectAll
-                checkBox.addEventListener("click", enableOrDisableDelete, false);
+                checkBox.addEventListener("click", toggleDeleteButton, false);
                 link.setAttribute("href", node.children[i].url);
                 link.textContent = node.children[i].title;
                 tdSelect.appendChild(checkBox);
@@ -137,7 +137,7 @@ var Ybc = (function() {
         }
     };
 
-    var enableOrDisableDelete = function() {
+    var toggleDeleteButton = function() {
         var deleteButton = document.getElementById("delete-button");
 
         // Enable the delete button if it is disabled and the checkbox is checked
