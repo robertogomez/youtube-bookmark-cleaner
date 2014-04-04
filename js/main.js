@@ -115,17 +115,25 @@ var Ybc = (function() {
     };
 
     var selectDeselectAll = function() {
-        var selectAll = document.getElementById("select-all");
+        var deleteButton = document.getElementById("delete-button");
 
         // Check all the checkboxes if selectAll is checked
-        if (selectAll.checked) {
+        if (this.checked) {
             for (i=0; i<checkBoxes.length; i++)
                 checkBoxes[i].checked = true;
+
+            // Enable the delete button if it is disabled
+            if (deleteButton.disabled)
+                deleteButton.disabled = false;
+
         }
         // Uncheck all the checkboxes if selectAll is unchecked
         else {
             for (var i=0; i<checkBoxes.length; i++)
                 checkBoxes[i].checked = false;
+
+            // Disable the delete button
+            deleteButton.disabled = true;
         }
     };
 
