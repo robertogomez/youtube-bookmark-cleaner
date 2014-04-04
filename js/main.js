@@ -1,7 +1,7 @@
 var Ybc = (function() {
     var removedVideos = [],     // Bookmarks which refer to removed videos from YouTube
         checkBoxes    = [],     // Checkboxes in each table row which correspond to the removed video
-        tbody         = document.getElementById("tbody"),
+        tableBody     = document.getElementById("table-body"),
         deleteButton  = document.getElementById("delete-button");
 
     // Send the assembled request to the YouTube Data API and check the response
@@ -10,15 +10,15 @@ var Ybc = (function() {
     var sendRequest = function(request, node, i) {
         request.execute(function(response) {
             if (response.pageInfo.totalResults === 0) {
-                var table    = document.getElementById("table"),
-                    tr       = document.createElement("tr"),
-                    tdSelect = document.createElement("td"),
-                    tdName   = document.createElement("td"),
-                    tdFolder = document.createElement("td"),
-                    tdDate   = document.createElement("td"),
-                    checkBox = document.createElement("input"),
-                    link     = document.createElement("a"),
-                    date     = new Date(node.children[i].dateAdded);
+                var table      = document.getElementById("table"),
+                    tableRow   = document.createElement("tr"),
+                    selectCell = document.createElement("td"),
+                    nameCell   = document.createElement("td"),
+                    folderCell = document.createElement("td"),
+                    dateCell   = document.createElement("td"),
+                    checkBox   = document.createElement("input"),
+                    link       = document.createElement("a"),
+                    date       = new Date(node.children[i].dateAdded);
 
                 // Display the table if it is hidden
                 if (window.getComputedStyle(table, null).getPropertyValue("display") === "none")
@@ -30,16 +30,16 @@ var Ybc = (function() {
                 checkBox.addEventListener("click", toggleDeleteButton, false);
                 link.setAttribute("href", node.children[i].url);
                 link.textContent = node.children[i].title;
-                tdSelect.appendChild(checkBox);
-                tdSelect.classList.add("checkbox-cell");
-                tdName.appendChild(link);
-                tdFolder.textContent = node.title;
-                tdDate.textContent = date.toLocaleDateString();
-                tr.appendChild(tdSelect);
-                tr.appendChild(tdName);
-                tr.appendChild(tdFolder);
-                tr.appendChild(tdDate);
-                tbody.appendChild(tr);
+                selectCell.appendChild(checkBox);
+                selectCell.classList.add("checkbox-cell");
+                nameCell.appendChild(link);
+                folderCell.textContent = node.title;
+                dateCell.textContent = date.toLocaleDateString();
+                tableRow.appendChild(selectCell);
+                tableRow.appendChild(nameCell);
+                tableRow.appendChild(folderCell);
+                tableRow.appendChild(dateCell);
+                tableBody.appendChild(tableRow);
 
                 // Save a reference to the removed YT bookmark for later access
                 removedVideos.push(node.children[i]);
@@ -89,7 +89,7 @@ var Ybc = (function() {
     var getBookmarks = function() {
         // Remove any old table entries
         for (var i=0; i<checkBoxes.length; i++)
-            tbody.removeChild((checkBoxes[i].parentElement).parentElement);
+            tableBody.removeChild((checkBoxes[i].parentElement).parentElement);
 
         // Reset the arrays
         removedVideos = [];
@@ -108,7 +108,7 @@ var Ybc = (function() {
                 console.log(removedVideos[i].title + " bookmark deleted...");
 
                 // Remove its row from the table
-                tbody.removeChild((checkBoxes[i].parentElement).parentElement);
+                tableBody.removeChild((checkBoxes[i].parentElement).parentElement);
             }
         }
 

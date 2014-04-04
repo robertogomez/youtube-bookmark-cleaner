@@ -44,23 +44,23 @@ thead {
     background-color: #d4dde4;
 }
 
-#select-col {
+#select-column {
     width: 5%;
 }
 
-#name-col {
+#name-column {
     width: 58%;
 }
 
-#folder-col {
+#folder-column {
     width: 25%;
 }
 
-#date-col {
+#date-column {
     width: 12%;
 }
 
-.titled-col {
+.titled-column {
     text-align: left;
 }
 
