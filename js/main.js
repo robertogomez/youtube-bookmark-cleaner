@@ -90,9 +90,25 @@ var Ybc = (function() {
     };
  
     var deleteBookmarks = function() {
+        var tbody = document.getElementById("tbody");
+
         for (var i=0; i<checkBoxes.length; i++) {
-            if (checkBoxes[i].checked)
-                console.log(removedVideos[i].title);
+            if (checkBoxes[i].checked) {
+                // Delete the checked bookmark
+                chrome.bookmarks.remove(removedVideos[i].id);
+                console.log(removedVideos[i].title + " bookmark deleted...");
+
+                // Remove its row from the table
+                tbody.removeChild((checkBoxes[i].parentElement).parentElement);
+            }
+        }
+
+        // Remove the references of the deleted bookmarks from the arrays
+        for (i=checkBoxes.length-1; i>=0; i--) {
+            if (checkBoxes[i].checked) {
+                removedVideos.splice(i, 1);
+                checkBoxes.splice(i, 1);
+            }
         }
     };
 
