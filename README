@@ -11,6 +11,11 @@ DESCRIPTION
     codes, even when the video has been deleted. This Chrome extension fills
     that gap by verifying the status of each video using the YouTube™ Data API.
 
+ACKNOWLEDGEMENTS
+    Font Awesome by Dave Gandy - http://fontawesome.io
+
+    Icon font packaging from Fontello.com
+
 AUTHOR
     Roberto Gomez, Jr.
 
