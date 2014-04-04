@@ -85,9 +85,19 @@ var Ybc = (function() {
             traverseTree(node.children[i]);
     };
 
-    // Get bookmarks in the form of a tree
-    // Need to pass first element of tree since getTree always returns an array
     var getBookmarks = function() {
+        var tbody = document.getElementById("tbody");
+
+        // Remove any old table entries
+        for (var i=0; i<checkBoxes.length; i++)
+            tbody.removeChild((checkBoxes[i].parentElement).parentElement);
+
+        // Reset the arrays
+        removedVideos = [];
+        checkBoxes = [];
+
+        // Get the bookmarks tree and perform the traversal on it
+        // Need to pass first element of tree since getTree always returns an array
         chrome.bookmarks.getTree(function(tree) { traverseTree(tree[0]); });
     };
  
