@@ -1,6 +1,8 @@
 var Ybc = (function() {
-    var removedVideos = [],
-        checkBoxes    = [];
+    var removedVideos = [],     // Bookmarks which refer to removed videos from YouTube
+        checkBoxes    = [],     // Checkboxes in each table row which correspond to the removed video
+        tbody         = document.getElementById("tbody"),
+        deleteButton  = document.getElementById("delete-button");
 
     // Send the assembled request to the YouTube Data API and check the response
     // The request is sent in this function, instead of in the for loop of scanNode(),
@@ -9,7 +11,6 @@ var Ybc = (function() {
         request.execute(function(response) {
             if (response.pageInfo.totalResults === 0) {
                 var table    = document.getElementById("table"),
-                    tbody    = document.getElementById("tbody"),
                     tr       = document.createElement("tr"),
                     tdSelect = document.createElement("td"),
                     tdName   = document.createElement("td"),
@@ -86,8 +87,6 @@ var Ybc = (function() {
     };
 
     var getBookmarks = function() {
-        var tbody = document.getElementById("tbody");
-
         // Remove any old table entries
         for (var i=0; i<checkBoxes.length; i++)
             tbody.removeChild((checkBoxes[i].parentElement).parentElement);
@@ -102,8 +101,6 @@ var Ybc = (function() {
     };
  
     var deleteBookmarks = function() {
-        var tbody = document.getElementById("tbody");
-
         for (var i=0; i<checkBoxes.length; i++) {
             if (checkBoxes[i].checked) {
                 // Delete the checked bookmark
@@ -125,8 +122,6 @@ var Ybc = (function() {
     };
 
     var toggleAllCheckboxes = function() {
-        var deleteButton = document.getElementById("delete-button");
-
         // Check all the checkboxes if select-all is checked
         if (this.checked) {
             for (i=0; i<checkBoxes.length; i++)
@@ -153,8 +148,6 @@ var Ybc = (function() {
     };
 
     var toggleDeleteButton = function() {
-        var deleteButton = document.getElementById("delete-button");
-
         // Enable the delete button if it is disabled and the checkbox is checked
         if (deleteButton.disabled && this.checked) {
             deleteButton.disabled = false;
@@ -176,7 +169,7 @@ var Ybc = (function() {
         }
     };
 
-    document.getElementById("delete-button").addEventListener("click", deleteBookmarks, false);
+    deleteButton.addEventListener("click", deleteBookmarks, false);
     document.getElementById("select-all").addEventListener("change", toggleAllCheckboxes, false);
 
     // Public methods
