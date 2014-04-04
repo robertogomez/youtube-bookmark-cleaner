@@ -126,6 +126,8 @@ var Ybc = (function() {
             if (deleteButton.disabled)
                 deleteButton.disabled = false;
 
+            // Enable the hover effect
+            deleteButton.classList.add("button-enabled");
         }
         // Uncheck all the checkboxes if select-all is unchecked
         else {
@@ -134,6 +136,9 @@ var Ybc = (function() {
 
             // Disable the delete button
             deleteButton.disabled = true;
+
+            // Disable the hover effect
+            deleteButton.classList.remove("button-enabled");
         }
     };
 
@@ -141,8 +146,12 @@ var Ybc = (function() {
         var deleteButton = document.getElementById("delete-button");
 
         // Enable the delete button if it is disabled and the checkbox is checked
-        if (deleteButton.disabled && this.checked)
+        if (deleteButton.disabled && this.checked) {
             deleteButton.disabled = false;
+
+            // Enable the hover effect
+            deleteButton.classList.add("button-enabled");
+        }
         // Otherwise disable it if all the other checkboxes are unchecked
         else {
             for (var i=0; i<checkBoxes.length; i++) {
@@ -151,6 +160,9 @@ var Ybc = (function() {
             }
 
             deleteButton.disabled = true;
+
+            // Disable the hover effect
+            deleteButton.classList.remove("button-enabled");
         }
     };
 
