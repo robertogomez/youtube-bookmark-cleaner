@@ -25,7 +25,7 @@ var Ybc = (function() {
  
                 // Add the bookmark to the table
                 checkBox.setAttribute("type", "checkbox");
-                // Bind to the click event instead of change to avoid chain-firing from selectAll
+                // Bind to the click event instead of change to avoid chain-firing from select-all
                 checkBox.addEventListener("click", toggleDeleteButton, false);
                 link.setAttribute("href", node.children[i].url);
                 link.textContent = node.children[i].title;
@@ -114,10 +114,10 @@ var Ybc = (function() {
         }
     };
 
-    var selectDeselectAll = function() {
+    var toggleAllCheckboxes = function() {
         var deleteButton = document.getElementById("delete-button");
 
-        // Check all the checkboxes if selectAll is checked
+        // Check all the checkboxes if select-all is checked
         if (this.checked) {
             for (i=0; i<checkBoxes.length; i++)
                 checkBoxes[i].checked = true;
@@ -127,7 +127,7 @@ var Ybc = (function() {
                 deleteButton.disabled = false;
 
         }
-        // Uncheck all the checkboxes if selectAll is unchecked
+        // Uncheck all the checkboxes if select-all is unchecked
         else {
             for (var i=0; i<checkBoxes.length; i++)
                 checkBoxes[i].checked = false;
@@ -155,7 +155,7 @@ var Ybc = (function() {
     };
 
     document.getElementById("delete-button").addEventListener("click", deleteBookmarks, false);
-    document.getElementById("select-all").addEventListener("change", selectDeselectAll, false);
+    document.getElementById("select-all").addEventListener("change", toggleAllCheckboxes, false);
 
     // Public methods
     return {
