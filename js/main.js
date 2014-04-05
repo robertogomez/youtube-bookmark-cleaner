@@ -4,6 +4,14 @@ var Ybc = (function() {
         tableBody     = document.getElementById("table-body"),
         deleteButton  = document.getElementById("delete-button");
 
+    var createNewList = function() {
+        var options = {
+            valueNames: ["name"],
+        };
+
+        var tableList = new List("results", options);
+    };
+
     // Send the assembled request to the YouTube Data API and check the response
     // The request is sent in this function, instead of in the for loop of scanNode(),
     // since sync issues arise when a callback function is used in a loop
@@ -30,6 +38,7 @@ var Ybc = (function() {
                 checkBox.addEventListener("click", toggleDeleteButton, false);
                 link.setAttribute("href", node.children[i].url);
                 link.textContent = node.children[i].title;
+                link.classList.add("name");
                 selectCell.appendChild(checkBox);
                 selectCell.classList.add("checkbox-cell");
                 nameCell.appendChild(link);
@@ -97,7 +106,14 @@ var Ybc = (function() {
 
         // Get the bookmarks tree and perform the traversal on it
         // Need to pass first element of tree since getTree always returns an array
-        chrome.bookmarks.getTree(function(tree) { traverseTree(tree[0]); });
+        chrome.bookmarks.getTree(function(tree) {
+            traverseTree(tree[0]);
+
+            // When traversal is completed, make the table sortable with list.js
+            console.log("Traversal completed...");
+            //window.alert("Traversal completed");
+            //createNewList();
+        });
     };
  
     var deleteBookmarks = function() {

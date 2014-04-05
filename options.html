@@ -18,24 +18,27 @@
                 </button>
             </div>
         </div>
-        <table id="table">
-            <colgroup>
-                <col id="select-column">
-                <col id="name-column">
-                <col id="folder-column">
-                <col id="date-column">
-            </colgroup>
-            <thead>
-                <tr>
-                    <th><input id="select-all" type="checkbox"></th>
-                    <th class="titled-column">Name</th>
-                    <th class="titled-column">Folder</th>
-                    <th class="titled-column">Date</th>
-                </tr>
-            </thead>
-            <tbody id="table-body">
-            </tbody>
-        </table>
+        <div id="results">
+            <table id="table">
+                <colgroup>
+                    <col id="select-column">
+                    <col id="name-column">
+                    <col id="folder-column">
+                    <col id="date-column">
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th><input id="select-all" type="checkbox"></th>
+                        <th class="sort" data-sort="name" class="titled-column">Name</th>
+                        <th class="titled-column">Folder</th>
+                        <th class="titled-column">Date</th>
+                    </tr>
+                </thead>
+                <tbody class="list" id="table-body">
+                </tbody>
+            </table>
+        </div>
+        <script src="js/list.min.js"></script>
         <script src="js/main.js"></script>
         <script src="js/key.js"></script>
         <script src="js/setup.js"></script>
