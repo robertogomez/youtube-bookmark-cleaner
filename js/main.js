@@ -1,6 +1,7 @@
 var Ybc = (function() {
     var removedVideos = [],     // Bookmarks which refer to removed videos from YouTube
         checkBoxes    = [],     // Checkboxes in each table row which correspond to the removed video
+        responseCount,          // Number of responses received
         mbArray       = [],     // Array of MatchedBookmark objects
         tableList,              // The list.js List object for making the table sortable
         options       = { valueNames: ["name"] },                   // Options for the List object
@@ -50,23 +51,29 @@ var Ybc = (function() {
             tableRow.appendChild(dateCell);
             tableBody.appendChild(tableRow);
 
-            // Save a reference to the removed YT bookmark for later access
-            removedVideos.push(node.children[this.index]);
-            //removedVideos.push(this);
-
             // Save a reference to the bookmark's checkbox
             checkBoxes.push(checkBox);
-
-            // Update the List object for the new table entry
-            tableList = new List("results", options);
 
             console.log(this.node.children[this.index].title + " has been removed from YouTube...");
         };
 
         this.sendRequest = function() {
             this.request.execute(function(response) {
+                responseCount++;
+
+                // If there are no results for the requested
+                // video, save a reference to its bookmark
                 if (response.pageInfo.totalResults === 0)
-                    self.addToTable();
+                    removedVideos.push(self);
+
+                // If this is the last response, add the bookmarks to the table
+                if (responseCount === mbArray.length) {
+                    for (var i=0; i<removedVideos.length; i++)
+                        removedVideos[i].addToTable();
+
+                    // Create the List object once the table is complete
+                    tableList = new List("results", options);
+                }
             });
         };
     };
@@ -95,7 +102,6 @@ var Ybc = (function() {
                     request = gapi.client.youtube.videos.list({"part": "status", "id": videoId});
 
                     mb = new MatchedBookmark(request, node, i);
-
                     mbArray.push(mb);
                 }
             }
@@ -118,6 +124,7 @@ var Ybc = (function() {
         // Reset the arrays
         removedVideos = [];
         checkBoxes = [];
+        responseCount = 0;
 
         // Get the bookmarks tree and perform the traversal on it
         // Need to pass first element of tree since getTree always returns an array
