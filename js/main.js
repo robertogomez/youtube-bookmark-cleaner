@@ -1,6 +1,7 @@
 var Ybc = (function() {
     var removedVideos = [],     // Bookmarks which refer to removed videos from YouTube
         checkBoxes    = [],     // Checkboxes in each table row which correspond to the removed video
+        mbArray       = [],
         tableBody     = document.getElementById("table-body"),
         deleteButton  = document.getElementById("delete-button");
 
@@ -12,53 +13,63 @@ var Ybc = (function() {
         var tableList = new List("results", options);
     };
 
-    // Send the assembled request to the YouTube Data API and check the response
-    // The request is sent in this function, instead of in the for loop of scanNode(),
-    // since sync issues arise when a callback function is used in a loop
-    var sendRequest = function(request, node, i) {
-        request.execute(function(response) {
-            if (response.pageInfo.totalResults === 0) {
-                var table      = document.getElementById("table"),
-                    tableRow   = document.createElement("tr"),
-                    selectCell = document.createElement("td"),
-                    nameCell   = document.createElement("td"),
-                    folderCell = document.createElement("td"),
-                    dateCell   = document.createElement("td"),
-                    checkBox   = document.createElement("input"),
-                    link       = document.createElement("a"),
-                    date       = new Date(node.children[i].dateAdded);
+    var MatchedBookmark = function(request, node, index) {
+        this.request = request;
+        this.node = node;
+        this.index = index;
 
-                // Display the table if it is hidden
-                if (window.getComputedStyle(table, null).getPropertyValue("display") === "none")
-                    table.style.display = "table";
+        // Store a reference to the object to be able to call addToTable() from within sendRequest() 
+        var self = this;
+
+        this.addToTable = function() {
+            var table      = document.getElementById("table"),
+                tableRow   = document.createElement("tr"),
+                selectCell = document.createElement("td"),
+                nameCell   = document.createElement("td"),
+                folderCell = document.createElement("td"),
+                dateCell   = document.createElement("td"),
+                checkBox   = document.createElement("input"),
+                link       = document.createElement("a"),
+                date       = new Date(this.node.children[this.index].dateAdded);
+
+            // Display the table if it is hidden
+            if (window.getComputedStyle(table, null).getPropertyValue("display") === "none")
+                table.style.display = "table";
  
-                // Add the bookmark to the table
-                checkBox.setAttribute("type", "checkbox");
-                // Bind to the click event instead of change to avoid chain-firing from select-all
-                checkBox.addEventListener("click", toggleDeleteButton, false);
-                link.setAttribute("href", node.children[i].url);
-                link.textContent = node.children[i].title;
-                link.classList.add("name");
-                selectCell.appendChild(checkBox);
-                selectCell.classList.add("checkbox-cell");
-                nameCell.appendChild(link);
-                folderCell.textContent = node.title;
-                dateCell.textContent = date.toLocaleDateString();
-                tableRow.appendChild(selectCell);
-                tableRow.appendChild(nameCell);
-                tableRow.appendChild(folderCell);
-                tableRow.appendChild(dateCell);
-                tableBody.appendChild(tableRow);
+            // Add the bookmark to the table
+            checkBox.setAttribute("type", "checkbox");
+            // Bind to the click event instead of change to avoid chain-firing from select-all
+            checkBox.addEventListener("click", toggleDeleteButton, false);
+            link.setAttribute("href", this.node.children[this.index].url);
+            link.textContent = this.node.children[this.index].title;
+            link.classList.add("name");
+            selectCell.appendChild(checkBox);
+            selectCell.classList.add("checkbox-cell");
+            nameCell.appendChild(link);
+            folderCell.textContent = this.node.title;
+            dateCell.textContent = date.toLocaleDateString();
+            tableRow.appendChild(selectCell);
+            tableRow.appendChild(nameCell);
+            tableRow.appendChild(folderCell);
+            tableRow.appendChild(dateCell);
+            tableBody.appendChild(tableRow);
 
-                // Save a reference to the removed YT bookmark for later access
-                removedVideos.push(node.children[i]);
+            // Save a reference to the removed YT bookmark for later access
+            removedVideos.push(node.children[this.index]);
+            //removedVideos.push(this);
 
-                // Save a reference to the bookmark's checkbox
-                checkBoxes.push(checkBox);
+            // Save a reference to the bookmark's checkbox
+            checkBoxes.push(checkBox);
 
-                console.log(node.children[i].title + " has been removed from YouTube...");
-            }
-        });
+            console.log(this.node.children[this.index].title + " has been removed from YouTube...");
+        };
+
+        this.sendRequest = function() {
+            this.request.execute(function(response) {
+                if (response.pageInfo.totalResults === 0)
+                    self.addToTable();
+            });
+        };
     };
 
     // Search for bookmarks in the specified node
@@ -69,7 +80,8 @@ var Ybc = (function() {
         var regex = /^.*(?:youtu.be\/|v\/|e\/|u\/\w+\/|embed\/|v=)([^#\&\?]*).*/,
             match,
             videoId,
-            request;
+            request,
+            mb;
 
         // Iterate over the child nodes of the parent node
         for (var i=0; i<node.children.length; i++) {
@@ -78,10 +90,14 @@ var Ybc = (function() {
                 match = node.children[i].url.match(regex);
                 // Length of 11 is necessary to avoid false positives, since video id's are 11 chars
                 videoId = (match && match[1].length === 11) ? match[1] : null;
-                // If the video id is valid, assemble the request and send it
+                // If the video id is valid, assemble the request, create a new
+                // matchedBookmark object, and add it to the array
                 if (videoId) {
                     request = gapi.client.youtube.videos.list({"part": "status", "id": videoId});
-                    sendRequest(request, node, i);
+
+                    mb = new MatchedBookmark(request, node, i);
+
+                    mbArray.push(mb);
                 }
             }
         }
@@ -109,10 +125,14 @@ var Ybc = (function() {
         chrome.bookmarks.getTree(function(tree) {
             traverseTree(tree[0]);
 
-            // When traversal is completed, make the table sortable with list.js
+            // When the traversal is completed, send the requests
             console.log("Traversal completed...");
-            //window.alert("Traversal completed");
-            //createNewList();
+            for (var i=0; i<mbArray.length; i++)
+                mbArray[i].sendRequest();
+
+            // Table constructed, make it sortable with list.js
+            console.log("Table constructed...");
+            createNewList();
         });
     };
  
