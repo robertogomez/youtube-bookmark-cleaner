@@ -1,24 +1,19 @@
 var Ybc = (function() {
     var removedVideos = [],     // Bookmarks which refer to removed videos from YouTube
         checkBoxes    = [],     // Checkboxes in each table row which correspond to the removed video
-        mbArray       = [],
-        tableBody     = document.getElementById("table-body"),
+        mbArray       = [],     // Array of MatchedBookmark objects
+        tableList,              // The list.js List object for making the table sortable
+        options       = { valueNames: ["name"] },                   // Options for the List object
+        tableBody     = document.getElementById("table-body"),      // References to HTML elements
         deleteButton  = document.getElementById("delete-button");
-
-    var createNewList = function() {
-        var options = {
-            valueNames: ["name"],
-        };
-
-        var tableList = new List("results", options);
-    };
 
     var MatchedBookmark = function(request, node, index) {
         this.request = request;
         this.node = node;
         this.index = index;
 
-        // Store a reference to the object to be able to call addToTable() from within sendRequest() 
+        // Store a reference to the constructed object for
+        // calling addToTable() from within sendRequest()
         var self = this;
 
         this.addToTable = function() {
@@ -42,6 +37,7 @@ var Ybc = (function() {
             checkBox.addEventListener("click", toggleDeleteButton, false);
             link.setAttribute("href", this.node.children[this.index].url);
             link.textContent = this.node.children[this.index].title;
+            // For the List object, indicate the content to sort by
             link.classList.add("name");
             selectCell.appendChild(checkBox);
             selectCell.classList.add("checkbox-cell");
@@ -60,6 +56,9 @@ var Ybc = (function() {
 
             // Save a reference to the bookmark's checkbox
             checkBoxes.push(checkBox);
+
+            // Update the List object for the new table entry
+            tableList = new List("results", options);
 
             console.log(this.node.children[this.index].title + " has been removed from YouTube...");
         };
@@ -129,10 +128,6 @@ var Ybc = (function() {
             console.log("Traversal completed...");
             for (var i=0; i<mbArray.length; i++)
                 mbArray[i].sendRequest();
-
-            // Table constructed, make it sortable with list.js
-            console.log("Table constructed...");
-            createNewList();
         });
     };
  
