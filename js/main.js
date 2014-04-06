@@ -4,7 +4,7 @@ var Ybc = (function() {
         responseCount,          // Number of responses received
         mbArray       = [],     // Array of MatchedBookmark objects
         tableList,              // The list.js List object for making the table sortable
-        options       = { valueNames: ["name"] },                   // Options for the List object
+        options       = { valueNames: ["name", "folder", "date"] }, // Options for the List object
         tableBody     = document.getElementById("table-body"),      // References to HTML elements
         deleteButton  = document.getElementById("delete-button");
 
@@ -40,6 +40,8 @@ var Ybc = (function() {
             link.textContent = this.node.children[this.index].title;
             // For the List object, indicate the content to sort by
             link.classList.add("name");
+            folderCell.classList.add("folder");
+            dateCell.classList.add("date");
             selectCell.appendChild(checkBox);
             selectCell.classList.add("checkbox-cell");
             nameCell.appendChild(link);
