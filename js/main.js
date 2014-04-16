@@ -1,11 +1,26 @@
 var Ybc = (function() {
-    var removedVideos = [],     // Bookmarks which refer to removed videos from YouTube
-        checkBoxes    = [],     // Checkboxes in each table row which correspond to the removed video
-        videoIds      = [],     // The YouTube video ids for all the matched bookmarks
-        tableList,              // The list.js List object for making the table sortable
-        options       = { valueNames: ["name", "folder", "date"] }, // Options for the List object
-        tableBody     = document.getElementById("table-body"),      // References to HTML elements
-        deleteButton  = document.getElementById("delete-button");
+    var videoIds      = [],     // The YouTube video ids for all the matched bookmarks
+        queries       = [];     // Array for storing multiple Query objects
+
+    // Object used to match a group of videos
+    // with its request and corresponding response
+    var Query = function(videoIdSegment, request) {
+        this.videoIdSegment = videoIdSegment;
+        this.request = request;
+
+        // The execute method of request needs to be called
+        // from within a method of the Query object in
+        // order to associate the response with the request
+        // A reference to the object needs to be stored in order to
+        // add the response property from within the callback function
+        this.sendRequest = function() {
+            var self = this;
+
+            this.request.execute(function(response) {
+                self.response = response;
+            });
+        };
+    };
 
     // Search for bookmarks in the specified node
     // Regex from Marc's comment on Stack Overflow
@@ -40,24 +55,14 @@ var Ybc = (function() {
 
     // Start the bookmarks retrieval process
     var getBookmarks = function() {
-        // Remove any old table entries
-        for (var i=0; i<checkBoxes.length; i++)
-            tableBody.removeChild((checkBoxes[i].parentElement).parentElement);
-
-        // Reset the arrays
-        removedVideos = [];
-        checkBoxes = [];
-        responseCount = 0;
-
-        // Get the bookmarks tree and traverse it for YouTube bookmarks
-        // Need to pass first element of tree since getTree always returns an array
-        // Once the traversal is complete, assemble the requests for the
-        // matched YouTube bookmarks, send them, and check the responses
         chrome.bookmarks.getTree(function(tree) {
+            // Need to pass first element of tree since getTree always returns an array
+            traverseTree(tree[0]);
+
             var videoIdSegments = new Array(Math.ceil(videoIds.length / 50)),
                 requests = new Array(videoIdSegments.length);
 
-            traverseTree(tree[0]);
+            queries = new Array(requests.length);
 
             // Divide videoIds into segments of 50 since
             // the API only allows up to 50 videos per request
@@ -69,91 +74,16 @@ var Ybc = (function() {
                 requests[i] = gapi.client.youtube.videos.list(
                     {"part": "id,status", "id": videoIdSegments[i].join()});
 
-            // Send the requests and check the responses
-            for (i=0; i<requests.length; i++) {
-                requests[i].execute(function(response) {
-                    console.log(response);
-                    //if (response.pageInfo.totalResults === videoIds.length)
-                    //    return;      // All videos are ok
-                    //else
-                    //    determine which videos are removed
-                });
-            }
+            // Create the Query objects
+            for (i=0; i<requests.length; i++)
+                queries[i] = new Query(videoIdSegments[i], requests[i]);
+
+            // Send the requests
+            for (i=0; i<queries.length; i++)
+                queries[i].sendRequest();
         });
     };
  
-    var deleteBookmarks = function() {
-        for (var i=0; i<checkBoxes.length; i++) {
-            if (checkBoxes[i].checked) {
-                // Delete the checked bookmark
-                chrome.bookmarks.remove(removedVideos[i].id);
-                console.log(removedVideos[i].title + " bookmark deleted...");
-
-                // Remove its row from the table
-                tableBody.removeChild((checkBoxes[i].parentElement).parentElement);
-            }
-        }
-
-        // Remove the references of the deleted bookmarks from the arrays
-        for (i=checkBoxes.length-1; i>=0; i--) {
-            if (checkBoxes[i].checked) {
-                removedVideos.splice(i, 1);
-                checkBoxes.splice(i, 1);
-            }
-        }
-    };
-
-    var toggleAllCheckboxes = function() {
-        // Check all the checkboxes if select-all is checked
-        if (this.checked) {
-            for (i=0; i<checkBoxes.length; i++)
-                checkBoxes[i].checked = true;
-
-            // Enable the delete button if it is disabled
-            if (deleteButton.disabled)
-                deleteButton.disabled = false;
-
-            // Enable the hover effect
-            deleteButton.classList.add("button-enabled");
-        }
-        // Uncheck all the checkboxes if select-all is unchecked
-        else {
-            for (var i=0; i<checkBoxes.length; i++)
-                checkBoxes[i].checked = false;
-
-            // Disable the delete button
-            deleteButton.disabled = true;
-
-            // Disable the hover effect
-            deleteButton.classList.remove("button-enabled");
-        }
-    };
-
-    var toggleDeleteButton = function() {
-        // Enable the delete button if it is disabled and the checkbox is checked
-        if (deleteButton.disabled && this.checked) {
-            deleteButton.disabled = false;
-
-            // Enable the hover effect
-            deleteButton.classList.add("button-enabled");
-        }
-        // Otherwise disable it if all the other checkboxes are unchecked
-        else {
-            for (var i=0; i<checkBoxes.length; i++) {
-                if (checkBoxes[i].checked)
-                    return;
-            }
-
-            deleteButton.disabled = true;
-
-            // Disable the hover effect
-            deleteButton.classList.remove("button-enabled");
-        }
-    };
-
-    deleteButton.addEventListener("click", deleteBookmarks, false);
-    document.getElementById("select-all").addEventListener("change", toggleAllCheckboxes, false);
-
     // Public methods
     return {
         init: function() {
