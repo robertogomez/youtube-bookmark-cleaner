@@ -1,6 +1,7 @@
 var Ybc = (function() {
     var videoIds      = [],     // The YouTube video ids for all the matched bookmarks
-        queries       = [];     // Array for storing multiple Query objects
+        queries       = [],     // Array for storing multiple Query objects
+        removedVideos = [];
 
     // Object used to match a group of videos
     // with its request and corresponding response
@@ -18,7 +19,29 @@ var Ybc = (function() {
 
             this.request.execute(function(response) {
                 self.response = response;
+
+                //self.findRemovedVids();
+
+                if (response.pageInfo.totalResults !== self.videoIdSegment.length) {
+                    for (var i=0, j=0; i<self.videoIdSegment.length; i++) {
+                        if (self.videoIdSegment[i] !== self.response.items[j].id)
+                            removedVideos.push(self.videoIdSegment[i]);
+                        else
+                            j++;
+                    }
+                }
             });
+        };
+
+        this.findRemovedVids = function() {
+            if (this.response.pageInfo.totalResults !== this.videoIdSegment.length) {
+                for (var i=0, j=0; i<this.videoIdSegment.length; i++) {
+                    if (this.videoIdSegment[i] !== this.response.items[j].id)
+                        removedVideos.push(this.videoIdSegment[i]);
+                    else
+                        j++;
+                }
+            }
         };
     };
 
